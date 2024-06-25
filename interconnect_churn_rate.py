@@ -85,3 +85,7 @@ df_phone.sample(5)
 #   - Identificar el desbalance de clases
 # - Enriquecer los datos con nuevas columnas
 # - Busqueda del mejor modelo
+# %% [markdown]-------------------------------------------------------------------------------------------------------
+# ## Preguntas aclaratorias
+# - ¿Para qué porcentaje de clientes que planean fugarse hay presupuesto para ofrecerle promociones?
+# - ¿Qué tipo de clientes son prioridad para identificar su posible fuga?
