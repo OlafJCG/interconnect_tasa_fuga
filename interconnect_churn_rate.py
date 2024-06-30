@@ -6,9 +6,6 @@
 import pandas as pd
 import os
 
-
-
-
 # %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
 # ## Funciones
 
@@ -80,14 +77,3 @@ df_phone.sample(5)
 # #### Comentario
 # - No tenemos datos nulos
 # - Confirmar que tenemos datos booleanos y cambiar el tipo de dato al mismo
-# %% [markdown]-------------------------------------------------------------------------------------------------------
-# ## Plan de Trabajo.
-# - Preprocesamiento, revisar si surgen errores al arreglar los datos.
-#   - Cambiar tipo de datos
-#   - Unir conjuntos de datos 
-# - Revisar los datos que perderíamos o que están ausentes por la inconsistencia de registros entre los diferentes conjuntos de datos.
-# - Análisis exploratorio de datos.
-#   - Buscar correlacion de datos para reducir la dimensionalidad
-#   - Identificar el desbalance de clases
-# - Enriquecer los datos con nuevas columnas
-# - Busqueda del mejor modelo
