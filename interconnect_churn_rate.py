@@ -1,15 +1,15 @@
 # %% [markdown]------------------------------
 # # Interconnect
-# %% [markdown] 
+# %% [markdown]Librerias----------------------------------------------------------------------------------------------------------------------------------
 # # Librerías. 
 # %%
 import pandas as pd
 import os
 
-# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# %% [markdown]Funciones----------------------------------------------------------------------------------------------------------------------------------
 # ## Funciones
 
-# %% [markdown]------------------------------
+# %% [markdown]--------------------------------------------------------------------------------------------------------
 # ## Carga de los datos.
 # %%
 if os.path.exists("files/datasets/final_provider/"):
@@ -21,9 +21,9 @@ df_contract = pd.read_csv(f'{folder_path}contract.csv')
 df_internet = pd.read_csv(f'{folder_path}internet.csv')
 df_personal = pd.read_csv(f'{folder_path}personal.csv')
 df_phone = pd.read_csv(f'{folder_path}phone.csv')
-# %% [markdown]------------------------------
+# %% [markdown]----------------------------------------------------------------------------------------------------------
 # ## Muestra de los datos
-# %% [markdown]-----
+# %% [markdown]------------------------------------------------------
 # ### Contract
 # %%
 # Imprime la información del dataframe
@@ -37,10 +37,11 @@ df_contract.sample(5)
 # - No tenemos datos nulos.
 # - Podemos probar creando columnas como:
 #   - Tipo de clase (Se fugó o no el cliente)
-#   - ¿Cuántos meses permaneció?
+#   - Días de contrato
 # - Cambiar los tipos de datos de las columnas "BeginDate", "EndDate"  a tipo datetime
-# - Cambiar los tipos de datos de las columnas "MonthlyCharges", "TotalCharges" a tipo float
-# %% [markdown]-----
+# - Investiga el motivo de que la columna "TotalCharges" sea de tipo object
+# - Cambiar el tipo de datos de la columna "TotalCharges" a tipo float
+# %% [markdown]------------------------------------------------------------
 # ### Internet
 # %%
 # Muestra la información del dataframe
@@ -53,7 +54,8 @@ df_internet.sample(5)
 # - No tenemos datos nulos
 # - Confirmar que tenemos columnas booleanas y cambiar el tipo de dato al mismo.
 # - Confirmar los datos únicos de la columna "InternetService" 
-# %% [markdown]-----
+# - Podríamos agregar los clientes faltantes con registros con "unknown"
+# %% [markdown]------------------------------------------------------------
 # ### Personal
 # %%
 # Muestra la información del dataframe
@@ -65,7 +67,7 @@ df_personal.sample(5)
 # - No tenemos datos nulos
 # - Confirmar que tenemos columnas booleanas y cambiar el tipo de dato al mismo
 # - Confirmar los datos únicos de la columna "gender" 
-# %% [markdown]-----
+# %% [markdown]---------------------------------------------------------
 # ### Phone
 # %%
 # Muestra la información del dataframe
@@ -77,3 +79,4 @@ df_phone.sample(5)
 # #### Comentario
 # - No tenemos datos nulos
 # - Confirmar que tenemos datos booleanos y cambiar el tipo de dato al mismo
+# - Podríamos agregar los clientes faltantes con registros con "unknown"
