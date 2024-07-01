@@ -100,3 +100,51 @@ df_phone.sample(5)
 # - No tenemos datos nulos
 # - Confirmar que tenemos datos booleanos y cambiar el tipo de dato al mismo
 # - Podríamos agregar los clientes faltantes con registros con "unknown"
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ## Arregla los datos (Parte 1)
+# %% [markdown]------------------------------------------------------------
+# ### Contract
+# %%
+# Cambia los nombres de las columnas de camell a snake
+df_contract.columns = pd.Series(df_contract.columns).apply(split_camel_to_snake)
+# Reemplaza la columna "id" por "customer_id"
+df_contract.rename(columns={'id':'customer_id'}, inplace=True)
+# formato de fecha
+date_format = "%Y-%m-%d"
+# Cambia las columnas "begin_date", "end_date" a tipo datetime
+df_contract[['begin_date', 'end_date']] = df_contract[['begin_date', 'end_date']].apply(pd.to_datetime, format=date_format, errors='coerce')
+# Cambia la columna "paperless_billing" a tipo booleano
+df_contract['paperless_billing'] = df_contract['paperless_billing'].replace({'Yes':1, 'No':0})
+# # Reemplaza los registros de la columna "total_charges" que tienen un espacio en blanco con 0
+df_contract['total_charges'] = df_contract['total_charges'].replace(' ',0)
+# Cambia las columnas "monthly_charges" y "total_charges" a float
+df_contract[['monthly_charges', 'total_charges']] = df_contract[['monthly_charges',  'total_charges']].astype('float')
+# %% [markdown]-----------------------------------------------------------
+# ### Internet
+# %%
+# Cambia los nombres de las columnas de camell a snake
+df_internet.columns = pd.Series(df_internet.columns).apply(split_camel_to_snake)
+# Reemplaza la columna "id" por "customer_id"
+df_internet.rename(columns={'id':'customer_id'}, inplace=True)
+# Cambia las columnas a tipo booleano excepto "customer_id" e "internet_service"
+df_internet.iloc[:,2:] = df_internet.iloc[:,2:].replace({'Yes':1, 'No':0})
+# %% [markdown]-----------------------------------------------------------
+# ### Personal
+# %%
+# Cambia los nombres de las columnas de camell a snake
+df_personal.columns = pd.Series(df_personal.columns).apply(split_camel_to_snake)
+# Reemplaza la columna "id" por "customer_id"
+df_personal.rename(columns={'id':'customer_id'}, inplace=True)
+# Reemplaza Female a 1 y Male a 0
+df_personal['gender'] = df_personal['gender'].replace({'Female':1, 'Male':0})
+# Cambia las columnas a tipo booleano excepto "customer_id" y "gender"
+df_personal.iloc[:,3:] = df_personal.iloc[:,3:].replace({'Yes':1, 'No':0})
+# %% [markdown]----------------------------------------------------------
+# ### Phone
+# %%
+# Cambia los nombres de las columnas de camell a snake
+df_phone.columns = pd.Series(df_phone.columns).apply(split_camel_to_snake)
+# Reemplaza la columna "id" por "customer_id"
+df_phone.rename(columns={'id':'customer_id'}, inplace=True)
+# Cambia la columna "multiple_lines" a tipo booleano
+df_phone['multiple_lines'] = df_phone['multiple_lines'].replace({'Yes':1, 'No':0})
