@@ -5,9 +5,29 @@
 # %%
 import pandas as pd
 import os
+import re
 
 # %% [markdown]Funciones----------------------------------------------------------------------------------------------------------------------------------
 # ## Funciones
+# %%
+# Función para cambiar de camel_case a snake_case
+def split_camel_to_snake(string, case='camel'):
+    """
+    Función que aplica un split a una cadena en camel o dromedary case y la retorna como snake case.
+    """
+    if case == 'camel':
+        if string.islower():
+            return string
+        else:
+            # Split camel case
+            return '_'.join(re.findall(r'[A-Z](?:[a-z]+|[A-Z]*(?=[A-Z]|$))', string)).lower()
+        
+    elif case == 'dromedary':
+        if string.islower():
+            return string
+        else:
+            # Split dromedary case
+            return '_'.join(re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?=[A-Z]|$)', string)).lower()
 
 # %% [markdown]--------------------------------------------------------------------------------------------------------
 # ## Carga de los datos.
