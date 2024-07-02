@@ -280,3 +280,23 @@ df_contract['begin_year'] = df_contract['begin_date'].dt.year
 df_contract['begin_month'] = df_contract['begin_date'].dt.month
 df_contract['begin_day'] = df_contract['begin_date'].dt.day
 df_contract['begin_dayofweek'] = df_contract['begin_date'].dt.dayofweek
+
+# %% [markdown]--------------------------------------------------------------------------
+# ## Unión de los conjuntos de datos
+# %%
+# Crea un df con todos los datos
+df_all = df_contract.merge(df_personal, how='outer', on='customer_id')
+# Incluye df_internet
+df_all = df_all.merge(df_internet, how='outer', on='customer_id')
+# Incluye df_phone
+df_all = df_all.merge(df_phone, how='outer', on='customer_id')
+# Convierte la columna "customer_id" a indice
+df_all = df_all.set_index('customer_id')
+# Elimina las columnas que no ocuparemos
+df_all = df_all.drop(columns=['begin_date', 'end_date'])
+# %%
+# Elimina las observaciones con registros nulos
+df_all = df_all.dropna()
+# %%
+# Cambia columnas a tipo bool
+df_all.iloc[:,10:] = df_all.iloc[:,10:].astype('bool')
