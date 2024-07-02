@@ -407,3 +407,8 @@ evaluate_model(clf_rf, X_train_rf, y_train_rf, X_valid_rf, y_valid_rf)
 # #### Comentario
 # - El mejor modelo fue con LightGBM
 # - El descenso de gradiente hizo la diferencia
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ## Prueba el mejor modelo 
+# %%
+# Prueba el modelo de lgbm con el conjunto de prueba
+evaluate_model(clf_lgb, X_train_lr, y_train_lr, X_test_lr, y_test_lr)
