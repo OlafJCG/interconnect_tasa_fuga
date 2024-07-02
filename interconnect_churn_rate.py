@@ -114,9 +114,7 @@ date_format = "%Y-%m-%d"
 # Cambia las columnas "begin_date", "end_date" a tipo datetime
 df_contract[['begin_date', 'end_date']] = df_contract[['begin_date', 'end_date']].apply(pd.to_datetime, format=date_format, errors='coerce')
 # Cambia la columna "paperless_billing" a tipo booleano
-df_contract['paperless_billing'] = df_contract['paperless_billing'].replace({'Yes':True, 'No':False})
-# Cambia el tipo de datos a booleano
-df_contract['paperless_billing'] = df_contract['paperless_billing'].astype(bool)
+df_contract['paperless_billing'] = df_contract['paperless_billing'].replace({'Yes':1, 'No':0})
 # # Reemplaza los registros de la columna "total_charges" que tienen un espacio en blanco con 0
 df_contract['total_charges'] = df_contract['total_charges'].replace(' ',0)
 # Cambia las columnas "monthly_charges" y "total_charges" a float
@@ -129,7 +127,7 @@ df_internet.columns = pd.Series(df_internet.columns).apply(split_camel_to_snake)
 # Reemplaza la columna "id" por "customer_id"
 df_internet.rename(columns={'id':'customer_id'}, inplace=True)
 # Cambia las columnas a tipo booleano excepto "customer_id" e "internet_service"
-df_internet.iloc[:,2:] = df_internet.iloc[:,2:].replace({'Yes':True, 'No':False}).astype(bool)
+df_internet.iloc[:,2:] = df_internet.iloc[:,2:].replace({'Yes':1, 'No':0})
 # %% [markdown]-----------------------------------------------------------
 # ### Personal
 # %%
@@ -137,10 +135,10 @@ df_internet.iloc[:,2:] = df_internet.iloc[:,2:].replace({'Yes':True, 'No':False}
 df_personal.columns = pd.Series(df_personal.columns).apply(split_camel_to_snake)
 # Reemplaza la columna "id" por "customer_id"
 df_personal.rename(columns={'id':'customer_id'}, inplace=True)
-# Cambia la columna "senior_citizen" a tipo booleano
-df_personal['senior_citizen'] = df_personal['senior_citizen'].astype(bool)
+# Reemplaza Female a 1 y Male a 0
+df_personal['gender'] = df_personal['gender'].replace({'Female':1, 'Male':0})
 # Cambia las columnas a tipo booleano excepto "customer_id" y "gender"
-df_personal.iloc[:,3:] = df_personal.iloc[:,3:].replace({'Yes':True, 'No':False}).astype(bool)
+df_personal.iloc[:,3:] = df_personal.iloc[:,3:].replace({'Yes':1, 'No':0})
 # %% [markdown]----------------------------------------------------------
 # ### Phone
 # %%
@@ -149,4 +147,4 @@ df_phone.columns = pd.Series(df_phone.columns).apply(split_camel_to_snake)
 # Reemplaza la columna "id" por "customer_id"
 df_phone.rename(columns={'id':'customer_id'}, inplace=True)
 # Cambia la columna "multiple_lines" a tipo booleano
-df_phone['multiple_lines'] = df_phone['multiple_lines'].replace({'Yes':True, 'No':False}).astype(bool)
+df_phone['multiple_lines'] = df_phone['multiple_lines'].replace({'Yes':1, 'No':0})
