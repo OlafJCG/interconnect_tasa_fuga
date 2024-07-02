@@ -270,3 +270,13 @@ plt.show()
 # - A pesar de que nuestro boxplot no muestra datos atipicos, si vemos un sesgo en la distribución de "total_charges" debido a que son pocos los clientes que ya llevan más tiempo en la empresa.
 # - Escalemos nuestras columnas numericas
 # - Observamos que los clientes que se fugaron, lo hicieron en los meses 10, 11, 12 y 1, de los cuales los 3 primeros corresponden al año 2019 y el último a 2020, sería recomendable identificar la posible causa de esto.
+# %% [markdown]--------------------------------------------------------------------------
+# ## Enriquece los datos
+# %%
+# Crea una columna con las clases (si se fugó o no)
+df_contract['left'] = ~df_contract['end_date'].isna()
+# Crea columnas con el año, mes, día y día de la semana en que el cliente se unió
+df_contract['begin_year'] = df_contract['begin_date'].dt.year
+df_contract['begin_month'] = df_contract['begin_date'].dt.month
+df_contract['begin_day'] = df_contract['begin_date'].dt.day
+df_contract['begin_dayofweek'] = df_contract['begin_date'].dt.dayofweek
