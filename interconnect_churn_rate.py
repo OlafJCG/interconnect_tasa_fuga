@@ -12,6 +12,14 @@ from matplotlib import pyplot as plt
 from sklearn import metrics
 import numpy as np
 
+from sklearn.preprocessing import RobustScaler
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+import lightgbm as lgb
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import OrdinalEncoder
+
 # %% [markdown]Funciones----------------------------------------------------------------------------------------------------------------------------------
 # ## Funciones
 # %%
@@ -300,3 +308,102 @@ df_all = df_all.dropna()
 # %%
 # Cambia columnas a tipo bool
 df_all.iloc[:,10:] = df_all.iloc[:,10:].astype('bool')
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ## Busqueda de modelo
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ## Escala las características numericas
+# %%
+# Escala las características númericas
+df_all[['monthly_charges', 'total_charges']] = RobustScaler().fit_transform(df_all[['monthly_charges', 'total_charges']])
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ### Preprocesamiento para Regresión Logística
+# %%
+# Crea una copia del df
+df_lr = df_all.copy()
+# %%
+## Codifica las columnas "type", "payment_method", "gender" e "internet_service" con OHE
+data_ohe = pd.get_dummies(df_lr[['type', 'payment_method', 'internet_service']], drop_first=True)
+# Elimina las columnas que se codificaron
+df_lr = df_lr.drop(columns=['type', 'payment_method', 'internet_service'])
+# Agrega data_ohe al df
+df_lr = df_lr.join(data_ohe)
+# %% [markdown]
+# ### Separa los datos
+# %%
+# Separa en conjuntos
+X_train_lr, X_lr, y_train_lr, y_lr = train_test_split(df_lr.drop('left',axis=1), df_lr['left'], test_size=0.6, random_state=12345)
+X_valid_lr, X_test_lr, y_valid_lr, y_test_lr = train_test_split(X_lr, y_lr, test_size=0.5, random_state=12345)
+
+# %% [markdown]---------
+# ### Regresión Logística
+# %%
+# Crea una instancia del modelo
+clf_lr = LogisticRegression(class_weight='balanced', random_state=12345).fit(X_train_lr, y_train_lr)
+
+# %%
+# Evalúa el modelo
+evaluate_model(clf_lr, X_train_lr, y_train_lr, X_valid_lr, y_valid_lr)
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ### LighGBM con el conjunto para Regresión Logística
+
+# %%
+# Pasa el modelo por gridsearch
+lgb_param_grid = {
+    'num_leaves': ['2^max_depth']+list(range(6,32,5)),
+    'max_depth':['-1']+list(range(5, 31, 5)),
+    'class_weight' : ['balanced'],
+    'learning_rate' : [0.05, 0.08, 0.1, 0.3, 0.5]
+}
+clf_lgb = lgb.LGBMClassifier(metric = 'auc', random_state=12345)
+lgb_GSCV = GridSearchCV(clf_lgb, param_grid=lgb_param_grid, verbose=50).fit(X_train_lr, y_train_lr)
+lgb_GSCV.best_params_
+
+# %%
+# Entrena el modelo con los mejores parámetros
+clf_lgb = lgb.LGBMClassifier(max_depth=10, num_leaves=21, learning_rate=0.3, class_weight='balanced', metric='auc', random_state=12345).fit(X_train_lr, y_train_lr)
+# %%
+# Evalúa el modelo
+evaluate_model(clf_lgb, X_train_lr, y_train_lr, X_valid_lr, y_valid_lr)
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ### Bosque Aleatorio
+# %%
+# Crea una copia del df para bosque
+df_rf = df_all.copy()
+# %% [markdown]----------------------------------------------------------
+# #### Preprocesamiento para Bosque
+# %%
+# Codifica las características
+rf_encoder = OrdinalEncoder()
+df_rf[['type', 'payment_method', 'internet_service']] = rf_encoder.fit_transform(df_rf[['type', 'payment_method', 'internet_service']])
+
+# %%
+# Separa el df en conjuntos de entrenamiento, validacion y prueba
+X_train_rf, X_rf, y_train_rf, y_rf = train_test_split(df_rf.drop('left',axis=1), df_rf['left'], test_size=0.6, random_state=12345)
+X_valid_rf, X_test_rf, y_valid_rf, y_test_rf = train_test_split(X_rf, y_rf, test_size=0.5,random_state=12345)
+
+# %%
+# Crea una instancia del modelo
+clf_rf = RandomForestClassifier(random_state=12345)
+
+# %%
+# Pasa el modelo por gridsearchcv
+rf_param_grid = {
+    'n_estimators':list(range(30,101, 10)),
+    'criterion':['gini', 'entropy', 'log_loss'],
+    'max_depth':['None']+list(range(5, 51, 5)),
+    'class_weight':['None','balanced', 'balanced_subsample']
+}
+# Busqueda del mejor grid
+clf_rf_GSCV = GridSearchCV(clf_rf, param_grid=rf_param_grid, scoring='roc_auc', verbose=50).fit(X_train_rf, y_train_rf)
+clf_rf_GSCV.best_params_
+
+# %%
+# Entrena el modelo con los mejores parámetros
+clf_rf = RandomForestClassifier(class_weight='balanced_subsample', n_estimators=80, criterion='entropy', max_depth=10, random_state=12345).fit(X_train_rf, y_train_rf)
+# %%
+# Evalúa el modelo
+evaluate_model(clf_rf, X_train_rf, y_train_rf, X_valid_rf, y_valid_rf)
+# %% [markdown]
+# #### Comentario
+# - El mejor modelo fue con LightGBM
+# - El descenso de gradiente hizo la diferencia
