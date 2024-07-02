@@ -7,6 +7,8 @@ import pandas as pd
 import os
 import re
 
+from matplotlib import pyplot as plt
+
 # %% [markdown]Funciones----------------------------------------------------------------------------------------------------------------------------------
 # ## Funciones
 # %%
@@ -148,3 +150,28 @@ df_phone.columns = pd.Series(df_phone.columns).apply(split_camel_to_snake)
 df_phone.rename(columns={'id':'customer_id'}, inplace=True)
 # Cambia la columna "multiple_lines" a tipo booleano
 df_phone['multiple_lines'] = df_phone['multiple_lines'].replace({'Yes':1, 'No':0})
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ## EDA
+# %% [markdown]-----------------------------------------------------------
+# ### Contract
+
+# %%
+# Muestra un boxplot de las columnas "monthly_charges" y "total_charges"
+for col in ['monthly_charges', 'total_charges']:
+    plt.boxplot(df_contract[col])
+    plt.title(f"Boxplot de la columna {col} para visualizar la distribución de los datos")
+    plt.xlabel(f"{col}")
+    plt.ylabel("Cantidad")
+    plt.show()
+# %%
+# Muestra un gráfico con las fechas y la cantidad de clientes que se fugaron
+plt.barh(list(df_contract[~df_contract['end_date'].isna()]['end_date'].value_counts().index), df_contract[~df_contract['end_date'].isna()]['end_date'].value_counts().values)
+plt.title("Fechas y cantidad de clientes que se fugaron.")
+plt.ylabel("Fechas")
+plt.xlabel("Cantidad")
+plt.show()
+# %% [markdown]
+# #### Comentario
+# - A pesar de que nuestro boxplot no muestra datos atipicos, si vemos un sesgo en la distribución de "total_charges" debido a que son pocos los clientes que ya llevan más tiempo en la empresa.
+# - Escalemos nuestras columnas numericas
+# - Observamos que los clientes que se fugaron, lo hicieron en los meses 10, 11, 12 y 1, de los cuales los 3 primeros corresponden al año 2019 y el último a 2020, sería recomendable identificar la posible causa de esto.
