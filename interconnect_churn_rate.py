@@ -412,3 +412,23 @@ evaluate_model(clf_rf, X_train_rf, y_train_rf, X_valid_rf, y_valid_rf)
 # %%
 # Prueba el modelo de lgbm con el conjunto de prueba
 evaluate_model(clf_lgb, X_train_lr, y_train_lr, X_test_lr, y_test_lr)
+
+
+# %% [markdown]----------------------------------------------------------------------------------------------------------------------------------
+# ## Informe de solución
+# %% [markdown]
+# ### Pasos que se realizaron y los que se omitieron
+# - Se consiguió llevar a cabo la mayoría del plan de trabajo.
+#   - Los datos problemáticos en el registro del total de ingreso resultaron ser espacios en blanco, que pueden corresponder a clientes nuevos que aún no reciben su primer cobro.
+#   - No hubo gran problema con las columnas con datos booleanos, ya que al convertir al tipo mismo no arrojaron problemas indicando que tratabamos con datos que contenían sólo dos tipos de registros.
+#   - Los clientes con datos faltantes en los conjuntos de datos correspondientes a la información sobre los servicios de internet y a la información sobre los servicios telefónicos tuvieron un efecto en los modelos el cual redujo el rendimiento de los mismos, por lo que se tomó la decisión de eliminarlos.
+#   - El enriquecimiento de los datos ayudó a los modelos, hubo una mejoría en las metricas.
+#   - Sería conveniente revisar las épocas ya que los clientes que se fugaron lo hicieron en un periodo consecutivo de 4 meses, algo curioso está sucediendo.
+#   - El desbalance de las clases fue notoria, sin embargo el balance en las clases de los modelos pasados por GridSearchCV nos arrojó buenos resultados.
+#   - Al tener la mayoría de columnas binarias no se realizó el análisis de correlacion de los datos.
+# %% [markdown]
+# ### Dificultades notorias
+# - Una de las dificultades que se me presentaron fue la busqueda del mejor conjunto de datos que fuera "buen combustible" para los modelos, comparar cómo se comporto el modelo con datos "unknown" vs prescindir de los datos nulos; Llevar a cabo PCA para reducir la dimensionalidad, no trayendo resultados favorables; Probar un mismo modelo con diferente conjunto de datos.
+# %% [markdown]
+# ### Modelo final
+# - El modelo final fue LightGBM, el descenso de gradiente junto con el conjunto de datos y el paso por diferentes hiperparámetros hicieron la mejor combinación para obtener un score 'AUC' de 0.88 en el conjunto de validación y hasta 0.9 en el conjunto de prueba.
