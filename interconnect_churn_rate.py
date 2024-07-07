@@ -130,8 +130,8 @@ def evaluate_model(model, train_features, train_target, test_features, test_targ
     return
 
 # ## Carga de los datos.
-if os.path.exists("files/datasets/final_provider/"):
-    folder_path = "files/datasets/final_provider/"
+if os.path.exists("files/datasets/input/final_provider/"):
+    folder_path = "files/datasets/input/final_provider/"
 else:
     folder_path = "/datasets/final_provider/"
 
