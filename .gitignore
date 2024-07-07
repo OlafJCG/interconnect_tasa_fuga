@@ -314,3 +314,6 @@ geckodriver.log
 
 # Ignora el entorno virtual
 /venv_interconnect_chr
+
+# Ignora archivos de configuración
+/vscode
