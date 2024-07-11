@@ -18,4 +18,4 @@ print(f"-----------------------------------------------------------\nComenzando 
 
 # Preprocessing -----------------------------------------------------------------------------------
 
-os.system(f"python{binary_extensions} files/datasets/intermediate/a01_df_all.parquet")
+os.system(f"python{binary_extensions} preprocessing/a01_preprocessing.py")
